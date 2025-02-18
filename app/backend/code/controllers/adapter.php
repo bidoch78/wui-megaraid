@@ -64,14 +64,17 @@ class adapter extends controller {
 
         $dataBySection = $wd->splitByStructure($structure, array("pi:*======*"));
 
-        foreach($dataBySection as &$adapter) {
-           dataWrapper::translateProperties($adapter);
-           foreach($structure as $section) {
+        foreach($dataBySection as $key => &$adapter) {
+
+            if ($this->hasNoAdapter($adapter)) { unset($dataBySection[$key]); continue; }
+
+            dataWrapper::translateProperties($adapter);
+            foreach($structure as $section) {
                if (isset($adapter[$section->getSectionName()])) {
                    dataWrapper::translateProperties($adapter[$section->getSectionName()]);
                }
-           }
-           self::convertData($adapter);
+            }
+            self::convertData($adapter);
         }
         unset($adapter);
 
@@ -85,8 +88,10 @@ class adapter extends controller {
 
         $wrapperData = core::getWrapper()->getAdapterInfo((int)$adapterId);
         $info = [ "adapter" => $this->getAdapterInfo((int)$adapterId, $wrapperData), "code" => $wrapperData->getCode() ];
-        
 
+        //No adapter
+        if (count($info["adapter"]) == 0) $info["code"] = 0;
+        
         return $info;
 
     } 
@@ -238,6 +243,21 @@ class adapter extends controller {
 
     }
 
+    private function hasNoAdapter(array $data) {
+
+        if (isset($data["properties"]["param"])) {
+            foreach($data["properties"]["param"] as $p) {
+                if (!$p || !is_array($p)) continue;
+                foreach($p as $i) {
+                    if (stripos($i, "controller is not present")) return true;
+                }
+            }
+        }
+
+        return false;
+
+    }
+
     public function getConfig() {
 
         $adapterId = $this->request->getAnyParameter("id");
@@ -256,6 +276,9 @@ class adapter extends controller {
                                                        "pi:virtual drive information:*"));
 
         $bootdrives = $this->getBootDrive();
+
+        //Check if no adapter
+        if ($this->hasNoAdapter($dataBySection[0])) return [ "adapters" => [], "code" => 0 ];
                                                                 
         foreach($dataBySection as &$adapter) {
 
@@ -265,8 +288,6 @@ class adapter extends controller {
             $adapter = $adapter["properties"];
             dataWrapper::convertData($adapter);
 
-            if (!isset($adapter["adapter"])) continue;
-            
             $adapter["adapter_id"] = $adapter["adapter"];
             unset($adapter["adapter"]);            
             $adapter["disk_group"] = $adapters;

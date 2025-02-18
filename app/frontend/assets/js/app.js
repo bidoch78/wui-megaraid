@@ -135,19 +135,19 @@ class app_core {
                                           </select>                              
                                         </li>
                                         <li class="nav-item">
-                                          <a class="nav-link ` + (curURLScreen == "overview" ? "active" : "") + `" data-screen="overview" href="#">Overview</a>
+                                          <a class="nav-link disabled ` + (curURLScreen == "overview" ? "active" : "") + `" data-screen="overview" href="#">Overview</a>
                                         </li>
                                         <li class="nav-item">
-                                          <a class="nav-link ` + (curURLScreen == "virtualdrives" ? "active" : "") + `" data-screen="virtualdrives" href="#">Virtual Drives</a>
+                                          <a class="nav-link disabled ` + (curURLScreen == "virtualdrives" ? "active" : "") + `" data-screen="virtualdrives" href="#">Virtual Drives</a>
                                         </li>
                                         <li class="nav-item">
-                                          <a class="nav-link ` + (curURLScreen == "physicaldrives" ? "active" : "") + `" data-screen="physicaldrives" href="#">Physical Drives</a>
+                                          <a class="nav-link disabled ` + (curURLScreen == "physicaldrives" ? "active" : "") + `" data-screen="physicaldrives" href="#">Physical Drives</a>
                                         </li>
                                         <li class="nav-item">
-                                          <a class="nav-link ` + (curURLScreen == "cfgforeign" ? "active" : "") + `" data-screen="cfgforeign" href="#">Foreign Config</a>
+                                          <a class="nav-link disabled ` + (curURLScreen == "cfgforeign" ? "active" : "") + `" data-screen="cfgforeign" href="#">Foreign Config</a>
                                         </li>                                        
                                         <li class="nav-item">
-                                          <a class="nav-link ` + (curURLScreen == "patrol" ? "active" : "") + `" data-screen="patrol" href="#">Patrol</a>
+                                          <a class="nav-link disabled ` + (curURLScreen == "patrol" ? "active" : "") + `" data-screen="patrol" href="#">Patrol</a>
                                         </li>
                                         <li class="nav-item">
                                           <a class="nav-link disabled ` + (curURLScreen == "bbu" ? "active" : "") + `"" data-screen="bbu" href="#">BBU</a>
@@ -331,13 +331,28 @@ class app_core {
       }, this));
 
       $combo.html(html);
-      $combo.prop("disabled", false);
 
       if (currentAdapter != $combo.val()) { 
           const eventData = this.#event.value; 
           eventData.adapterId = $combo.val(); 
           this.#event.value = eventData;
           this.hasBBU(currentHasBBU);
+      }
+
+      if (json.adapters.length) {
+        $combo.prop("disabled", false);
+        $header.find(".nav-link").removeClass("disabled");
+      }
+      else {
+        //No adapter detected
+        screen.displayModal({
+          'alwaysCloseWithButtons': true,
+          'body': "No adapter detected",
+          'buttons': [
+            { 'caption': 'Ok', 'class': 'btn-outline-primary', closemodal: true, 'visible': true }
+          ]
+        });
+  
       }
 
     }
