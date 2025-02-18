@@ -1,0 +1,23 @@
+name: megaraid
+
+services:
+
+  megaraid_container:
+    container_name: megaraid_container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    tty: true
+    privileged: true
+    ports:
+      - "8088:80"
+    networks:
+      - megaraid-network
+    volumes:
+     - ./../../app/frontend/:/var/www/frontend    
+     - ./../../app/backend/:/var/www/backend
+   
+networks:
+  megaraid-network:
+    name: megaraid-network
+    driver: bridge

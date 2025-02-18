@@ -107,6 +107,7 @@ class app_core {
         case "virtualdrives":
         case "virtualdrives":  
         case "physicaldrives":
+        case "cfgforeign":
         case "patrol":
         case "bbu":
         case "satadrivers":
@@ -142,6 +143,9 @@ class app_core {
                                         <li class="nav-item">
                                           <a class="nav-link ` + (curURLScreen == "physicaldrives" ? "active" : "") + `" data-screen="physicaldrives" href="#">Physical Drives</a>
                                         </li>
+                                        <li class="nav-item">
+                                          <a class="nav-link ` + (curURLScreen == "cfgforeign" ? "active" : "") + `" data-screen="cfgforeign" href="#">Foreign Config</a>
+                                        </li>                                        
                                         <li class="nav-item">
                                           <a class="nav-link ` + (curURLScreen == "patrol" ? "active" : "") + `" data-screen="patrol" href="#">Patrol</a>
                                         </li>

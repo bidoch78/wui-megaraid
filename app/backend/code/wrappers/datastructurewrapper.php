@@ -16,7 +16,7 @@ class dataStructureWrapper implements \IteratorAggregate {
 
     private ?dataNode $_data = null;
 
-    public function __construct(string $sectionName = null, string $pattern = null, array $options = null) {
+    public function __construct(string $sectionName = null, string|array $pattern = null, array $options = null) {
         $this->_sectionName = ($sectionName) ? $sectionName : "";
         $this->_options = $options;
         if ($pattern) $this->_patternFct = dataWrapper::getPatternFunction($pattern);
@@ -28,7 +28,7 @@ class dataStructureWrapper implements \IteratorAggregate {
 
     public function getSectionName(): string { return $this->_sectionName; }
 
-    public function addSection(string $sectionName, string $pattern = null, array $options = null):dataStructureWrapper {
+    public function addSection(string $sectionName, string|array $pattern = null, array $options = null):dataStructureWrapper {
         if (!$this->_subsections) $this->_subsections = [];
         $ss = new self($sectionName, $pattern, $options);
         $ss->_parent = $this;

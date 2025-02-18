@@ -17,7 +17,8 @@
     "SEAGATE SMKR6000S5xeN7.23P00Z4D2KN5P                                ", // SPECIAL
     "Pliant  LB406SC         MS0740502148    tag/T3CH                    ",  // SPECIAL
     "SEAGATE SMKR6000S5xeN7.23P00Z4D2M0PA                                ",  // SPECIAL
-    "BTTV410202U2100FGN  MK0100GCTYU                             5DV1HPG4"
+    "BTTV410202U2100FGN  MK0100GCTYU                             5DV1HPG4",
+    "E095071B06CE00325284SATA SSD                                SBFM61.5" // ??? integral no name
     ];
 
     foreach($inquiry as $i) {

@@ -246,26 +246,27 @@ class adapter extends controller {
 
         $structure = dataStructureWrapper::root();
 
-        $structure->addSection("disk_group", "pi:disk group:*")
+        $structure->addSection("disk_group", ["pi:disk group:*", "pi:spanned disk group:*"])
             ->addSection("span", "pi:span:*")
                 ->addSection("virtual_drive", "pi:virtual drive:*")
                     ->addSection("physical_drive", "pi:physical disk:*");
-
+        
         $dataBySection = $wd->splitByStructure($structure, 
                                                  array("pi:physical disk information:*",   
-                                                       "pi:virtual drive information:*",
-                                                       "pi:physical disk information:*"));
+                                                       "pi:virtual drive information:*"));
 
         $bootdrives = $this->getBootDrive();
                                                                 
         foreach($dataBySection as &$adapter) {
+
+            if (!isset($adapter["disk_group"])) $adapter["disk_group"] = [];
 
             $adapters = $adapter["disk_group"];
             $adapter = $adapter["properties"];
             dataWrapper::convertData($adapter);
 
             if (!isset($adapter["adapter"])) continue;
-
+            
             $adapter["adapter_id"] = $adapter["adapter"];
             unset($adapter["adapter"]);            
             $adapter["disk_group"] = $adapters;

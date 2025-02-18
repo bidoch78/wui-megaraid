@@ -38,6 +38,10 @@ class physicaldrives extends screen {
       pdinfo += `<span class="badge badge-size bg-primary">${drive.firmware_state}</span>`;
       pdinfo += `<span class="badge badge-size bg-primary">${drive.drive_temperature.celsius}°c</span>`;
       
+      if (drive.foreign_state != "None") {
+        pdinfo += `<span class="badge badge-size bg-warning">${drive.foreign_state}</span>`;
+      }
+      
       /*
         add label avec progression
       */
@@ -145,12 +149,17 @@ Foreign State: Foreign => a previous config is find
       $html.find(".drive-action").on("click", $.proxy(function(info, e) { 
 
         var $this = $(e.currentTarget);
+
+        var options = {};
+        const dataOption = $this.attr("data-option");
+        if (dataOption) options[dataOption] = true;
+
         var text = "";
         var data = {  'info': info, 
                       'post': {
                         'command': $this.attr("data-action"), 
                         'pid': drive.enclosure_device_id + ":" + drive.slot_number,
-                        'options': $this.attr("data-option") 
+                        'options': options
                       }
                     };
 
@@ -161,7 +170,13 @@ Foreign State: Foreign => a previous config is find
                       : "Locate the drive(s) for the selected controller(s) and deactivate the drive activity LED";
               break;
           case "makegood":
-              text = "Change the state of a drive from Unconfigured-Bad to Unconfigured-Good";
+              text = "Change the state of a drive to Unconfigured-Good";
+              text += '<div class="alert alert-sm alert-primary" role="alert">';
+                text += '<div class="option-checkbox">';
+                  text += '<input type="checkbox" class="custom-control-input" data-option="force" id="optforce">';
+                  text += '<label class="custom-control-label" for="optforce">Force</label>';
+                text += "</div>";
+              text += "</div>";
               break;
           case "prprmv":
               text = ($this.attr("data-option") == "undo") 
@@ -173,7 +188,7 @@ Foreign State: Foreign => a previous config is find
               break;
         }
 
-        text = text + `<br>Drive: Slot: ${drive.slot_number} ${drive.vendor} ${drive.model} (WWN:${drive.wwn})`;
+        text = text + `<div class="drive_info">Drive: Slot: ${drive.slot_number} ${drive.vendor} ${drive.model} (WWN:${drive.wwn})</div>`;
 
         screen.displayModal({
           'alwaysCloseWithButtons': true,
@@ -182,33 +197,35 @@ Foreign State: Foreign => a previous config is find
               { 'caption': 'Cancel', 'class': 'btn-outline-secondary', closemodal: true, 'visible': true },
               { 'caption': 'Send', 'class': 'btn-outline-danger', closemodal: false, 'visible': true, 'onclick': $.proxy(function(apidata, dt) {
                 
+                dt.div.find("[data-option]").each($.proxy(function(index, item) {
+
+                  const $item = $(item);
+                  if ($item.is("input") && $item.attr("type") == "checkbox" && $item.is(":checked")) {
+                    this.post.options[$item.attr("data-option")] = true;
+                  }
+
+                }, apidata));
+
                 dt.updateHTML(`<div class="loading_data"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><div>`);
                 dt.displayFooterButtons();
 
-                  alert("need to check");
-
-                // this.api.sendPhysicalDrivesCommand(this.eventValue.adapterId, { 'post': apidata.post }).then($.proxy(function(json) { 
+                this.api.sendPhysicalDrivesCommand(this.eventValue.adapterId, $.proxy(function(json) { 
                   
-                //   if (json && (json.success === 0 || json.code != 0)) {
-                //     var error = "error...";
-                //     if (json.return) error = json.return.join("<br>");
-                //     if (json.message) error = json.message;
-                //     throw new Error(error);
-                //   }
-            
-                //   var msg = "";
-                //   if (json.return) msg = json.return.join("<br>");
-                //   dt.updateHTML(`<div class="alert alert-success" role="alert">${msg}</div>`);
+                  if (json && (json.success === 0 || json.code != 0)) {
+                    var error = "error...";
+                    if (json.return) error = json.return.join("<br>");
+                    if (json.message) error = json.message;
+                    dt.updateHTML(`<div class="alert alert-danger" role="alert">${error}</div>`);
+                  }
+                  else {
+                    var msg = "";
+                    if (json.return) msg = json.return.join("<br>");
+                    dt.updateHTML(`<div class="alert alert-success" role="alert">${msg}</div>`);
+                  }
 
-                // }, this)).
-                // catch($.proxy(function(err) {
-                //   dt.updateHTML(`<div class="alert alert-danger" role="alert">${err}</div>`);
-                // }, this)).
-                // finally(function() {
-                //   dt.displayFooterButtons([
-                //     { 'caption': 'Close', 'class': 'btn-outline-secondary', closemodal: true, 'visible': true }
-                //   ]);
-                // })
+                  dt.displayFooterButtons([ { 'caption': 'Close', 'class': 'btn-outline-secondary', closemodal: true, 'visible': true } ]);
+
+                }, this), { 'dispError': false, 'post': apidata.post }); 
 
               }, this, data)}
 

@@ -1,0 +1,41 @@
+#!/bin/sh
+set -e
+
+# echo 'start deployment'
+
+# app_version=$(cat /tmp/pharmacademy/app.version)
+# cur_version=""
+
+# if [ -f /var/www/html/version ]; then
+#     cur_version=$(cat /var/www/html/version)
+# fi
+
+# echo "deploy version ${app_version} on current version ${cur_version}";
+
+# if [ "$app_version" = "$cur_version" ]; then
+
+#     echo "app already deployed"
+    
+# else
+
+#     #copy new app files
+#     echo "copy new files (extract)"
+
+#     gosu www tar -xf /tmp/pharmacademy/app.tar.gz -C /var/www/html
+
+#     #chmod -R 775 /var/www/html
+#     #chown -R www:www /var/www/html
+
+#     #delete temporary files
+#     gosu www rm -r /tmp/pharmacademy/
+
+# fi
+
+# echo 'end deployment'
+
+# echo "start nginx & php-fpm & cron services"
+# echo "enjoy!!!"
+
+supervisord -n -c /etc/supervisord.conf
+
+exec "$@"

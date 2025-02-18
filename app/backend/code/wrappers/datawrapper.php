@@ -298,40 +298,76 @@ class dataWrapper {
     public static function getPatternFunction(string|array $splitOn): mixed {
 
         $splitFct = null;
+        $checkPattern = [];
 
-        $splitPattern = null;
-        $splitSection = null;
-        if (is_array($splitOn)) {
-            $splitPattern = $splitOn[0];
-            $splitSection = $splitOn[1];
-        }
-        else {
-            $splitPattern = $splitOn;
+        if (!is_array($splitOn)) $splitOn = [ $splitOn ];
+        
+        foreach($splitOn as $patternInfo) {
+
+            $pos = strpos($patternInfo, ":");
+            switch(substr($patternInfo, 0, $pos)) {
+                //shell patern
+                case "p":
+                    $checkPattern[] = [ "info" => "p", "pattern" => substr($patternInfo, $pos + 1) ];
+                    break;
+                //shell patern case insensitive
+                case "pi":
+                    $checkPattern[] = [ "info" => "pi", "pattern" => strtolower(substr($patternInfo, $pos + 1)) ];
+                    break;
+            }
+
         }
 
-        $pos = strpos($splitPattern, ":");
-        switch(substr($splitPattern, 0, $pos)) {
-            //shell patern
-            case "p":
-                $pattern = substr($splitPattern, $pos + 1);
-                $splitFct = function($data) use ($pattern, $splitSection) {
-                    if (fnmatch($pattern, $data)) {
-                        return $splitSection ? $splitSection : true;
-                    }
-                    return false;
-                };
-                break;
-            //shell patern case insensitive
-            case "pi":
-                $pattern = strtolower(substr($splitPattern, $pos + 1));
-                $splitFct = function($data) use ($pattern, $splitSection) {
-                    if (fnmatch($pattern, strtolower($data))) {
-                        return $splitSection ? $splitSection : true;
-                    }
-                    return false;
-                };
-                break;
-        }
+        $splitFct = function($data) use ($checkPattern) {
+
+            foreach($checkPattern as $check) {
+                switch($check["info"]) {
+                    case "p": 
+                        if (fnmatch($check["pattern"], $data) === true) return true;
+                        break;
+                    case "pi":
+                        if (fnmatch($check["pattern"], strtolower($data)) === true) return true;
+                        break;
+                }
+            }
+
+            return false;
+
+        };
+
+        // $splitPattern = null;
+        // $splitSection = null;
+        // if (is_array($splitOn)) {
+        //     $splitPattern = $splitOn[0];
+        //     $splitSection = $splitOn[1];
+        // }
+        // else {
+        //     $splitPattern = $splitOn;
+        // }
+
+        // $pos = strpos($splitPattern, ":");
+        // switch(substr($splitPattern, 0, $pos)) {
+        //     //shell patern
+        //     case "p":
+        //         $pattern = substr($splitPattern, $pos + 1);
+        //         $splitFct = function($data) use ($pattern, $splitSection) {
+        //             if (fnmatch($pattern, $data)) {
+        //                 return $splitSection ? $splitSection : true;
+        //             }
+        //             return false;
+        //         };
+        //         break;
+        //     //shell patern case insensitive
+        //     case "pi":
+        //         $pattern = strtolower(substr($splitPattern, $pos + 1));
+        //         $splitFct = function($data) use ($pattern, $splitSection) {
+        //             if (fnmatch($pattern, strtolower($data))) {
+        //                 return $splitSection ? $splitSection : true;
+        //             }
+        //             return false;
+        //         };
+        //         break;
+        // }
 
         return $splitFct;
 

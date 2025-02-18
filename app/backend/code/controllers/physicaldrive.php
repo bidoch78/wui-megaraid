@@ -31,35 +31,41 @@ class physicalDrive extends controller {
         $adapterId = (int)$this->request->getAnyParameter("id");
         $physicalDriveId = $this->request->getAnyParameter("pid");
         $command = $this->request->getAnyParameter("command");
+        $options = $this->request->getAnyParameter("options");
+        if (!$options) $options = [];
+
 
         $commandOptions = [];
-
+        
         switch($command) {
             case "locate":
                 $command = "PDLocate";
-                $commandOptions[] = ($this->request->getAnyParameter("options") == "start") ? "-Start" : "-Stop";
-                break;
-            case "makegood":
-                $command = "PDMakeGood";
+                $commandOptions[] = (isset($options["start"]) && $options["start"] === true) ? "-Start" : "-Stop";
+                $commandOptions[] = "-PhysDrv[" . $physicalDriveId . "]";
                 break;
             case "prprmv":
-                if ($this->request->getAnyParameter("options") == "undo") $commandOptions[] = "-Undo";
+                if (isset($options["undo"]) && $options["undo"] === true) $commandOptions[] = "-Undo";
                 $command = "PDPrpRmv";
+                $commandOptions[] = "-PhysDrv[" . $physicalDriveId . "]";
                 break;
             case "markmissing":
                 $command = "PDMarkMissing";
+                $commandOptions[] = "-PhysDrv[" . $physicalDriveId . "]";
+                break;
+            case "makegood":
+                $commandOptions[] = "-PhysDrv[" . $physicalDriveId . "]";
+                if (isset($options["force"]) && $options["force"] === true) $commandOptions[] = "-Force";
+                $command = "PDMakeGood";
                 break;
             default:
                 throw new megaraidException("Unkown command `" + $command + "`");    
         }
 
-        $commandOptions[] = "-PhysDrv[" . $physicalDriveId . "]";
-
         $wrapperData = core::getWrapper()->executeCommand($adapterId, $command, $commandOptions);
 
         $info = [ "return" => $wrapperData->getData(), "code" => $wrapperData->getCode() ];
 
-        return $info;            
+        return $info;               
 
     }
 
@@ -143,6 +149,8 @@ class physicalDrive extends controller {
                 unset($adapter["properties"]);            
             }
 
+            if (!isset($adapter["physicaldrives"])) $adapter["physicaldrives"] = [];
+
             foreach($adapter["physicaldrives"] as &$pd) {
                 $pd = $pd["properties"];
                 self::convertData($pd);
@@ -197,7 +205,7 @@ class physicalDrive extends controller {
         }
         else {
             $pd["drive_is_assigned"] = false;
-            $pd["slot_key"] = "N/A";            
+            $pd["slot_key"] = $pd["slot_number"];         
         }
   
         $pd["device_key"] = $pd["enclosure_device_id"] . ":" . $pd["slot_number"];

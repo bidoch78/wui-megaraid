@@ -137,3 +137,7 @@ sudo megacli -LDSetProp -Name test -L1 -a0
 Set name to test on Adapter 0, VD 1 (target id: 1) success
 
 Exit Code: 0x00
+
+------------------------
+------------------------
+ megacli -PDMakeGood -PhysDrv[62:4] -Force -a0

@@ -33,11 +33,7 @@ class virtualdrives extends screen {
         $(this.container).find(".accordion").html("");
         const vgroups = json.adapters[0].disk_group;
         for (let vg of vgroups) {
-          for(let span of vg.span) {
-            for(let vdrive of span.virtual_drive) {
-              $(this.container).find(".accordion").append(virtualdrives.buildHTMLVirtualDrive(vdrive, this));
-            }
-          }
+          $(this.container).find(".accordion").append(virtualdrives.buildHTMLVirtualDrive(vg, this));
         }
 
         this.app.loadingInProgress(false);
@@ -46,7 +42,9 @@ class virtualdrives extends screen {
 
   }
 
-  static buildHTMLVirtualDrive(vdrive, refScreen) {
+  static buildHTMLVirtualDrive(vg, refScreen) {
+
+    var vdrive = vg.span[0].virtual_drive[0];
 
     let vdinfo = "VD:" + vdrive.virtual_drive_id + ' - ' + vdrive.name;
     vdinfo += `<span class="badge badge-size bg-primary">${vdrive.size}</span>`;
@@ -111,10 +109,59 @@ class virtualdrives extends screen {
 
     var $html = $(html);
 
-    
+    if (vg.number_of_spans > 1) {
+      
+      for (let span of vg.span) {
 
-    for(let pdrive of vdrive.physical_drive) {
-      $html.find(".accordionvdrive-body").append(physicaldrives.buildHTMLDrive(pdrive, refScreen));
+        const key = vdrive.virtual_drive_id + "_" + span.span_reference;
+
+        let htmlspan = `<div class="accordion-item">
+
+          <h4 class="accordion-header accordion-adapter d-flex" id="headingspandrive${key}">
+            <div class="button-adapter collapsed flex-grow-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapsespandrive${key}" aria-expanded="false" aria-controls="collapsespandrive${key}">
+              <div class="row virtualdriveinfo">
+                <div class="col-auto me-auto"><i class="bi bi-layers-fill icon-span"></i> Span: ${key}</div>
+              </div>
+            </div>
+            <div class="col-auto">
+              <div class="dropdown">
+                <button class="btn btn-sm btn-primary dropdown-toggle btn-action" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="bi bi-menu-button-fill"></i>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item drive-action" data-action="locate" data-option="start" href="#">Start Consistency Check</a></li>
+                  <li><a class="dropdown-item drive-action" data-action="locate" data-option="start" href="#">Stop Consistency Check</a></li>
+                </ul>
+              </div>
+            </div>        
+          </h4>
+
+          <div id="collapsespandrive${key}" class="accordion-collapse collapse" aria-labelledby="headingspandrive${key}">
+            <div class="accordionvspan-body">            
+            </div>
+          </div>
+
+        </div>`;
+
+        htmlspan += '</div>';
+
+        var $htmlspan = $(htmlspan);
+
+        for(let pdrive of span.virtual_drive[0].physical_drive) {
+          $htmlspan.find(".accordionvspan-body").append(physicaldrives.buildHTMLDrive(pdrive, refScreen));
+        }
+
+        $html.find(".accordionvdrive-body").append($htmlspan);
+      
+      }
+
+    }
+    else {
+
+      for(let pdrive of vdrive.physical_drive) {
+        $html.find(".accordionvdrive-body").append(physicaldrives.buildHTMLDrive(pdrive, refScreen));
+      }
+
     }
 
     return $html;
