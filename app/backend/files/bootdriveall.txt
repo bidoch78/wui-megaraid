@@ -1,0 +1,8 @@
+
+                                     
+Adapter 0: Boot Virtual Drive - #0 (target id - 0).
+
+Adapter 1: Boot Virtual Drive - #2 (target id - 2).
+Adapter 3: Boot Virtual Drive - #44 (target id - 55).
+
+Exit Code: 0x00

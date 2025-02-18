@@ -1,0 +1,139 @@
+sudo /opt/MegaRAID/MegaCli/MegaCli64 -LDInfo -Lall -a0 > virtualdrive.txt
+sudo /opt/MegaRAID/MegaCli/MegaCli64 -PDList -a0 > physicaldrive.txt
+sudo /opt/MegaRAID/MegaCli/MegaCli64 -AdpBootDrive -Get -a0 > bootdrive.txt
+sudo /opt/MegaRAID/MegaCli/MegaCli64 -AdpCount > countcontroller.txt
+sudo /opt/MegaRAID/MegaCli/MegaCli64 -v
+sudo /opt/MegaRAID/MegaCli/MegaCli64 AdpAllInfo a0 > controllerinfo.txt
+
+sudo MegaCli64 -AdpPR -Info -aALL > read patrol data
+l
+sudo /opt/MegaRAID/MegaCli/MegaCli64 -CfgDsply -a0
+
+MegaCli64 AdpBootDrive Get aN|a0,1,2|aALL => get bootable virtualdrive
+
+//Check patrol
+self.parent.run_command('-AdpPR', '-Info', '-a%d' % self.controller_number)
+
+//Battery info
+-AdpBbuCmd -GetBbuStatus', '-a%d' % self.controller_number
+https://www.advancedclustering.com/act_kb/check-status-lsi-raid-card-battery-backup-unit/
+
+https://wikitech.wikimedia.org/wiki/MegaCli
+
+https://www.alteeve.com/w/MegaCli64_Cheat_Sheet
+
+https://serverfault.com/questions/1054776/megaraid-performance-difference-between-volumes
+
+https://www.mybluelinux.com/debian-linux-and-lsi-megaraid-sas/
+
+//Background process
+sudo /usr/sbin/megacli -LDBI -ShowProg -LAll -a0
+
+Background Initialization on VD #0 (target id #0) Complete 50% in 1 Minutes.
+
+Exit Code: 0x00
+
+--------------------------------------------------
+Quand un disque est en mode rebuild
+"firmware_state": "Rebuild"
+
+Run command
+ sudo /usr/sbin/megacli -PDRbld showProg -PhysDrv[252:0] -a0
+
+Result:
+
+Rebuild Progress on Device at Enclosure 252, Slot 0 Completed 21% in 0 Minutes.
+
+Exit Code: 0x00
+
+
+https://www.snia.org/sites/default/files/SNIA_DDF_Technical_Position_v2.0.pdf
+
+https://github.com/thomas-krenn/check_lsi_raid/tree/master
+
+//foreign
+sudo /usr/sbin/megacli -CfgForeign -Scan -a0
+sudo /usr/sbin/megacli -CfgForeign -Dsply -a0
+
+GHS to DHS Global Hotspare / Dedicated Hotspare
+
+ sudo /usr/sbin/megacli -CfgLdAdd -r0[252:4,252:5] WT NORA Direct NoCachedBadBBU -strpsz64 -a0
+sudo /usr/sbin/megacli -CfgLDDel -L1 -a0
+
+sudo /usr/sbin/megacli -CfgLdAdd -r1[252:5,252:6,252:7] WT NORA Direct NoCachedBadBBU -strpsz128 -Hsp[252:7] -a0
+
+sudo megacli -PdReplaceMissing -PhysDrv[252:3] -array1 -row1 -a0
+    array 1 => Disk 1 (DISK GROUP)
+    row 1 => (physicaldrive number)
+    
+
+=> REBUILD in progress (get all drives of the VD)
+sudo megacli -PDRbld -ShowProg -PhysDrv [252:3,252:2,252:4] -aALL
+
+Rebuild Progress on Device at Enclosure 252, Slot 3 Completed 12% in 8 Minutes.
+Device(Encl-252 Slot-2) is not in rebuild process
+Device(Encl-252 Slot-4) is not in rebuild process
+
+Exit Code: 0x00
+
+
+///////////////////
+ sudo megacli -LDCC -Start -Lall -a0
+
+ Start Check Consistency on Virtual Drive 0 (target id: 0) Success.
+
+Exit Code: 0x00
+
+// 
+
+sudo megacli -LDCC -ShowProg -Lall -a0
+
+Check Consistency on VD #0 (target id #0) Completed 3% in 0 Minutes.
+
+Exit Code: 0x00
+
+
+//
+
+ybidoli@nas:~$ sudo megacli -AdpCcSched -Info -a0
+
+Adapter #0
+
+Operation Mode: Concurrent
+Execution Delay: 168
+Next start time: 10/08/2024, 21:00:00
+Current State: Stopped
+Number of iterations: 2
+Number of VD completed: 0
+Excluded VDs          : None
+Exit Code: 0x00
+
+////////////////////// ALARM //////////////////////////////
+
+HW Configuration
+================
+Alarm            : Present
+
+//ALARM =>  MegaCli64 -AdpSetProp <AlarmEnbl | AlarmDsbl | AlarmSilence> -aN
+
+If AlarmDsbl
+sudo megacli AdpAllInfo a0
+        Settings
+================
+Cluster Mode                     : Disabled
+Alarm                            : Disabled
+
+If AlarmEnbl
+
+Settings
+================
+Cluster Mode                     : Disabled
+Alarm                            : Enabled
+
+/////////////////////////////////////////////////////////////
+
+sudo megacli -LDSetProp -Name test -L1 -a0
+
+Set name to test on Adapter 0, VD 1 (target id: 1) success
+
+Exit Code: 0x00

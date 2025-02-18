@@ -1,0 +1,29 @@
+
+                                     
+
+Adapter 0 -- Virtual Drive Information:
+Virtual Drive: 0 (Target Id: 0)
+Name                :system
+RAID Level          : Primary-1, Secondary-0, RAID Level Qualifier-0
+Size                : 223.062 GB
+Sector Size         : 512
+Is VD emulated      : No
+Mirror Data         : 223.062 GB
+State               : Optimal
+Strip Size          : 64 KB
+Number Of Drives    : 2
+Span Depth          : 1
+Default Cache Policy: WriteThrough, ReadAheadNone, Direct, No Write Cache if Bad BBU
+Current Cache Policy: WriteThrough, ReadAheadNone, Direct, No Write Cache if Bad BBU
+Default Access Policy: Read/Write
+Current Access Policy: Read/Write
+Disk Cache Policy   : Disk's Default
+Ongoing Progresses:
+  Background Initialization: Completed 43%, Taken 1 min.
+  Check Consistency        : Completed 18%, Taken 0 min.
+Encryption Type     : None
+PI type: No PI
+
+Is VD Cached: No
+
+Exit Code: 0x00

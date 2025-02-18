@@ -1,0 +1,5 @@
+Rebuild Progress on Device at Enclosure 252, Slot 0 Completed 56% in 8 Minutes.
+Device(Encl-64 Slot-6) is not in rebuild process
+Device(Encl-62 Slot-0) is not in rebuild process
+
+Exit Code: 0x00

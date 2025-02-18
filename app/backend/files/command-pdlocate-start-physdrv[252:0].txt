@@ -1,0 +1,4 @@
+
+Adapter: 0: Device at EnclId-252 SlotId-3  -- PD Locate Start Command was successfully sent to Firmware
+
+Exit Code: 0x00

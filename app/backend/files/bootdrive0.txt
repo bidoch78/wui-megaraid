@@ -1,0 +1,4 @@
+                                     
+Adapter 0: Boot Virtual Drive - #0 (target id - 0).
+
+Exit Code: 0x00

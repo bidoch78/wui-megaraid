@@ -51,6 +51,6 @@ Thumbs.db
 /data
 /docker/server/build_app
 
-/app/backend/config
+/app/backend/config/*
 /app/backend/vendor/
 /app/frontend/node_modules/

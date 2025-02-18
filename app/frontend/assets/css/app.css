@@ -1,0 +1,160 @@
+.loading_data {
+  background-color: rgba(100, 100, 100, .30);
+  display: flex;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;    
+  width: 100%;
+  z-index: 5000;
+  top: 0;
+  left: 0;
+}
+
+.modal-body .loading_data {
+  text-align: center;
+  height: auto;
+  background-color: transparent;
+  position: initial;
+}
+
+.footer {
+  font-size: 0.8rem;
+}
+
+.footer p {
+  margin-bottom: 0;
+}
+
+li:has(.nav-link.active) {
+  background-color: #9ec5fe;
+}
+
+.app_div {
+  margin-bottom: 4rem;  
+}
+
+.debug_div {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  overflow-y: auto;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  padding-bottom: 4rem;
+  background-color: var(--bs-gray-100);
+  display: none;
+}
+
+.app_container {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.debug_div{ 
+ background-color: black;
+ color: white;
+}
+
+.debug_div .accordion-header {
+  color: rgb(233, 216, 68);
+}
+
+.trace-item button.accordion-button {
+  font-size: 14px;
+}
+
+.trace-item .bi, .icon-drive.bi {
+  margin-right: 5px;
+}
+
+.accordion-item.trace-item {
+  margin-bottom: 2px;
+}
+
+/*****/
+
+.accordion-adapter .button-adapter {
+  font-size: 0.8rem;
+}
+
+.accordion-adapter .badge-size {
+  margin-left: 5px;
+} 
+
+.icon-card {
+  font-size: 1.5rem;
+  color: #19cb19c4;
+}
+
+.accordion-drive .icon-drive {
+  font-size: 1.5rem;
+}
+
+.accordion-drive .badge-size {
+  margin-left: 5px;
+} 
+
+.accordion-drive .button-drive {
+  font-size: 0.8rem;
+}
+
+.accordion-adapter, .accordion-drive {
+  padding: 4px;
+}
+
+.temperatore-sensor-high {
+  font-size: 1.4rem;
+  color: red;
+  text-shadow: 1px 1px 5px;
+}
+
+.temperatore-sensor-warning {
+  font-size: 1.4rem;
+  color: rgb(233, 216, 68);
+  text-shadow: 1px 1px 5px;
+}
+
+.temperatore-sensor-icon {
+  margin-left: -15px;
+}
+
+.link-rebuild {
+  color: rgb(233, 216, 68) !important;
+  -webkit-text-decoration-color: rgb(233, 216, 68) !important;
+  text-decoration-color: rgb(233, 216, 68) !important;
+}
+
+.progress-rebuild {
+  display: inline-flex;
+  width: 100px;
+  margin-left: 5px;
+  height: 20px;
+}
+
+.icon-vdrive {
+  font-size: 1.5rem;
+  color: #198754
+}
+
+/*** login ***/
+
+.app-login {
+  position: fixed;
+  left:0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-login .login-container {
+  background-color: white;
+  width: 400px;
+  border: 1px #c6c7c8 solid;
+  border-radius: 15px;
+}

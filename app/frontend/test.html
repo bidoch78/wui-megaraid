@@ -1,0 +1,79 @@
+<html leng="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="Y.Bidoli">
+        <title> </title>
+    </head>
+
+    <script src="assets/js/autobahn.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <body>
+
+        <div id="app" class="container-fluid">
+        </div>
+
+        <script>
+
+            $(document).ready(function() {
+
+                // var connection = new autobahn.Connection({url: 'ws://localhost:8087', realm: 'kittensCategory',
+
+                //     // authid: 'my-user',
+                //     // authmethods: ['ticket'],
+
+                //     // onchallenge: function (session, method, extra) {
+
+                //     //     switch (method) {
+                //     //         case 'ticket':
+                        
+                                
+                //     //             // For browser facing javascript, and untrusted NodeJS clients,
+                //     //             // the JWT should be generated on the server,
+                //     //             // and the result should be passed to the client.
+                //     //             // The browser should not be trusted with the JWT signing key, only the JWT itself. e.g.
+
+                //     //             return fetch('/my-jwt-generator').then(function (response) {
+                //     //                 return response.text();
+                //     //             });
+
+                //     //         default:
+                //     //         throw new Error('Unknown auth method');
+                //     //     }
+
+                //     // }
+
+                // });
+
+                // connection.open(function() {
+
+                // });
+
+                var conn = new ab.Session('ws://localhost:8087/?token=popo',
+                function() {
+                    conn.subscribe('kittensCategory', function(topic, data) {
+                        // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
+                        console.log('New article published to category "' + topic + '" : ' + data.title);
+                    });
+                },
+                function() {
+                    console.warn('WebSocket connection closed');
+                },
+                {'skipSubprotocolCheck': true}
+                );
+
+/*
+https://nginx.org/en/docs/http/websocket.html
+
+*/
+
+            });
+
+        </script>
+
+    </body>
+
+</html>

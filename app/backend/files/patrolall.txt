@@ -1,0 +1,32 @@
+
+Adapter 0: Patrol Read Information:
+
+Patrol Read Mode: Auto
+Patrol Read Execution Delay: 168 hours
+Number of iterations completed: 0
+Next start time: 02/06/2024, 21:00:00
+Current State: Stopped
+Patrol Read on SSD Devices: Disabled
+
+
+Adapter 1: Patrol Read Information:
+
+Patrol Read Mode: Auto
+Patrol Read Execution Delay: 168 hours
+Number of iterations completed: 2
+Next start time: 02/06/2022, 21:00:00
+Current State: Stopped
+Patrol Read on SSD Devices: Disabled
+
+
+Adapter 2: Patrol Read Information:
+
+Patrol Read Mode: Auto
+Patrol Read Execution Delay: 33 hours
+Number of iterations completed: 12
+Next start time: 02/06/2020, 21:00:00
+Current State: Stopped
+Patrol Read on SSD Devices: Disabled
+
+
+Exit Code: 0x00
